@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGP 個別輔導計畫填寫工具｜勝利國中資優班</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg2: #f7f6f3;
+  --bg3: #f0ede8;
+  --text: #1a1a18;
+  --text2: #5f5e5a;
+  --text3: #888780;
+  --border: rgba(0,0,0,0.12);
+  --border2: rgba(0,0,0,0.22);
+  --blue-bg: #e6f1fb;
+  --blue-text: #0c447c;
+  --green-bg: #eaf3de;
+  --green-text: #27500a;
+  --amber-bg: #faeeda;
+  --amber-text: #633806;
+  --red-bg: #fcebeb;
+  --red-text: #791f1f;
+  --pink-bg: #fbeaf0;
+  --pink-text: #72243e;
+  --gray-bg: #f1efe8;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1c;
+    --bg2: #2a2a28;
+    --bg3: #333331;
+    --text: #f0ede8;
+    --text2: #b4b2a9;
+    --text3: #888780;
+    --border: rgba(255,255,255,0.12);
+    --border2: rgba(255,255,255,0.22);
+    --blue-bg: #0c2840;
+    --blue-text: #85b7eb;
+    --green-bg: #173404;
+    --green-text: #c0dd97;
+    --amber-bg: #412402;
+    --amber-text: #fac775;
+    --red-bg: #501313;
+    --red-text: #f09595;
+    --pink-bg: #4b1528;
+    --pink-text: #ed93b1;
+    --gray-bg: #2c2c2a;
+  }
+}
+
+body {
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+.page-header {
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  width: 36px; height: 36px;
+  border-radius: var(--radius);
+  background: var(--blue-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.page-header h1 { font-size: 16px; font-weight: 500; }
+.page-header p { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+.badge {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--blue-bg); color: var(--blue-text);
+  font-weight: 500; white-space: nowrap; margin-left: auto;
+}
+
+.container { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+.step-nav {
+  display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap;
+  background: var(--bg); border-radius: var(--radius-lg);
+  padding: 10px 14px; border: 0.5px solid var(--border);
+}
+
+.step-btn {
+  font-size: 13px; padding: 6px 14px;
+  border: 0.5px solid var(--border2);
+  border-radius: 20px;
+  background: transparent; color: var(--text2);
+  cursor: pointer; transition: all .15s;
+  font-family: inherit;
+}
+.step-btn.active {
+  background: var(--text); color: var(--bg);
+  border-color: var(--text); font-weight: 500;
+}
+.step-btn:hover:not(.active) { background: var(--bg2); }
+.step-btn.done { border-color: var(--green-text); color: var(--green-text); }
+
+.card {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 12px; font-weight: 500; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .05em;
+  margin-bottom: .875rem; padding-bottom: 8px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px; margin-bottom: 1rem;
+}
+
+.field label {
+  font-size: 12px; color: var(--text2);
+  display: block; margin-bottom: 4px; font-weight: 500;
+}
+
+.field select,
+.field input[type="text"],
+.field input[type="date"],
+.field textarea {
+  width: 100%; font-size: 13px;
+  padding: 7px 10px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color .15s;
+}
+
+.field select:focus,
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--blue-text);
+  box-shadow: 0 0 0 3px rgba(55,138,221,0.15);
+}
+
+.field textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px; margin-bottom: 1rem;
+}
+
+.metric {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+}
+.metric-val { font-size: 20px; font-weight: 500; }
+.metric-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.info-row {
+  display: grid; grid-template-columns: 120px 1fr;
+  gap: 6px; align-items: center;
+  font-size: 13px; padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--text2); font-weight: 500; }
+
+.notice {
+  font-size: 12px; color: var(--text2);
+  background: var(--blue-bg); color: var(--blue-text);
+  border-radius: var(--radius);
+  padding: 8px 12px; margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.unit-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; table-layout: fixed;
+}
+.unit-table th {
+  background: var(--bg2); padding: 8px 10px;
+  text-align: left; font-weight: 500;
+  font-size: 12px; color: var(--text2);
+  border: 0.5px solid var(--border);
+  position: sticky; top: 56px;
+}
+.unit-table td {
+  padding: 7px 10px;
+  border: 0.5px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+.unit-table tr:hover td { background: var(--bg2); }
+
+.adj-tags, .eval-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.adj-tag {
+  font-size: 11px; padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--blue-bg); color: var(--blue-text);
+  white-space: nowrap;
+}
+.eval-tag {
+  font-size: 11px; padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--bg2); color: var(--text2);
+  border: 0.5px solid var(--border2);
+  white-space: nowrap;
+}
+
+.score-select {
+  width: 100%; font-size: 12px;
+  padding: 5px 7px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius);
+  background: var(--bg); color: var(--text);
+  font-family: inherit; cursor: pointer;
+}
+.score-select.s-top  { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+.score-select.s-good { background: var(--blue-bg);  color: var(--blue-text);  border-color: var(--blue-text); }
+.score-select.s-fair { background: var(--amber-bg); color: var(--amber-text); border-color: var(--amber-text); }
+.score-select.s-mid  { background: var(--pink-bg);  color: var(--pink-text);  border-color: var(--pink-text); }
+.score-select.s-low  { background: var(--red-bg);   color: var(--red-text);   border-color: var(--red-text); }
+.score-select.s-weak { background: var(--red-bg);   color: var(--red-text);   border-color: var(--red-text); font-weight:500; }
+
+.actions {
+  display: flex; gap: 8px; margin-top: 1.25rem; flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-pri {
+  padding: 8px 20px;
+  border-radius: var(--radius);
+  background: var(--text); color: var(--bg);
+  border: none; font-size: 13px;
+  cursor: pointer; font-family: inherit;
+  transition: opacity .15s;
+}
+.btn-pri:hover { opacity: .85; }
+
+.btn-sec {
+  padding: 8px 20px;
+  border-radius: var(--radius);
+  background: transparent; color: var(--text2);
+  border: 0.5px solid var(--border2);
+  font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.btn-sec:hover { background: var(--bg2); }
+
+.btn-outline {
+  padding: 8px 20px;
+  border-radius: var(--radius);
+  background: transparent; color: var(--blue-text);
+  border: 0.5px solid var(--blue-text);
+  font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.btn-outline:hover { background: var(--blue-bg); }
+
+.progress-bar {
+  height: 3px; background: var(--bg3);
+  border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--blue-text);
+  border-radius: 2px; transition: width .3s ease;
+}
+
+.score-summary {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: .75rem;
+}
+.score-pill {
+  font-size: 12px; padding: 3px 10px;
+  border-radius: 20px; font-weight: 500;
+}
+
+.teach-cell {
+  font-size: 12px; color: var(--text2);
+  line-height: 1.55; max-height: 90px;
+  overflow-y: auto;
+}
+
+/* Print styles */
+@media print {
+  body { background: white; font-size: 12px; }
+  .page-header, .step-nav, .actions, .progress-bar, .notice { display: none !important; }
+  .card { border: 1px solid #ccc; margin-bottom: 8px; page-break-inside: avoid; }
+  .container { padding: 0; max-width: 100%; }
+  .unit-table th { background: #f0f0f0 !important; }
+  .score-select { border: 1px solid #ccc !important; background: white !important; }
+}
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 14px; }
+  .container { padding: 1rem .75rem; }
+  .card { padding: 1rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .unit-table { font-size: 12px; }
+  .unit-table th, .unit-table td { padding: 5px 6px; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="logo">📋</div>
+  <div>
+    <h1>IGP 個別輔導計畫填寫工具</h1>
+    <p>新竹縣立勝利國民中學・114學年度第2學期・資賦優異班</p>
+  </div>
+  <span class="badge">114-2 數理資優</span>
+</header>
+
+<div class="container">
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:25%"></div>
+  </div>
+
+  <nav class="step-nav">
+    <button class="step-btn active" id="nav0" onclick="showStep(0)">① 選擇科目</button>
+    <button class="step-btn"        id="nav1" onclick="showStep(1)">② 基本資訊</button>
+    <button class="step-btn"        id="nav2" onclick="showStep(2)">③ 週次單元</button>
+    <button class="step-btn"        id="nav3" onclick="showStep(3)">④ 評量結果</button>
+  </nav>
+
+  <!-- STEP 0: 選擇科目 -->
+  <div id="step0">
+    <div class="card">
+      <div class="section-title">選擇課程與學生</div>
+      <div class="form-row">
+        <div class="field">
+          <label>年級篩選</label>
+          <select id="selGrade" onchange="filterSubjects()">
+            <option value="">全部年級</option>
+            <option value="七年級">七年級</option>
+            <option value="八年級">八年級</option>
+            <option value="九年級">九年級</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>課程科目 <span style="color:red">*</span></label>
+          <select id="selSubject" onchange="onSubjectChange()">
+            <option value="">請選擇科目...</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>學生姓名 <span style="color:red">*</span></label>
+          <input type="text" id="studentName" placeholder="請輸入學生姓名"/>
+        </div>
+        <div class="field">
+          <label>學年度學期</label>
+          <input type="text" id="semester" value="114學年度第2學期" />
+        </div>
+      </div>
+
+      <div id="subjPreview" style="display:none">
+        <div class="summary-grid">
+          <div class="metric">
+            <div class="metric-val" id="prev-hours">—</div>
+            <div class="metric-lbl">節數 / 週</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" id="prev-units">—</div>
+            <div class="metric-lbl">教學單元數</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" id="prev-type">—</div>
+            <div class="metric-lbl">課程類型</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" id="prev-grade">—</div>
+            <div class="metric-lbl">開課年級</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-pri" onclick="goStep1()">下一步：確認基本資訊 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: 基本資訊 -->
+  <div id="step1" style="display:none">
+    <div class="card">
+      <div class="section-title">課程基本資訊</div>
+      <div class="notice">以下資訊已從課程計畫自動帶入，請確認後可直接修改。</div>
+      <div id="infoDisplay"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">學年目標（核心素養 / 學習重點）</div>
+      <div class="field" style="margin-bottom:.75rem">
+        <label>學年目標（建議填寫 3–5 條，整學期的學習總目標）</label>
+        <textarea id="annualGoal" rows="5"
+          placeholder="例如：&#10;1. 能熟練二元一次聯立方程式的解法，並應用於日常情境。&#10;2. 能理解直角坐標系的意義，並描繪二元一次方程式的圖形。&#10;3. 能掌握比例式、正反比的概念與應用。"></textarea>
+      </div>
+      <div class="field">
+        <label>核心素養（參考課程計畫，可直接複製）</label>
+        <textarea id="coreCompetency" rows="3"
+          placeholder="例如：A2.系統思考與問題解決、B1.符號運用與溝通表達、C2.人際關係與團隊合作"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-sec" onclick="showStep(0)">← 上一步</button>
+      <button class="btn-pri" onclick="showStep(2)">下一步：週次單元 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: 週次單元 -->
+  <div id="step2" style="display:none">
+    <div class="card">
+      <div class="section-title">週次教學單元</div>
+      <div class="notice">單元資訊已從課程計畫自動帶入。單元名稱欄位可直接點擊編輯。</div>
+      <div style="overflow-x:auto">
+        <table class="unit-table" id="unitTable">
+          <thead>
+            <tr>
+              <th style="width:60px">週次</th>
+              <th style="width:150px">單元名稱</th>
+              <th>教學重點</th>
+              <th style="width:120px">學習內容調整</th>
+              <th style="width:120px">評量方式</th>
+            </tr>
+          </thead>
+          <tbody id="unitBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-sec" onclick="showStep(1)">← 上一步</button>
+      <button class="btn-pri" onclick="showStep(3)">下一步：評量結果 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: 評量結果 -->
+  <div id="step3" style="display:none">
+    <div class="card">
+      <div class="section-title">評量結果登錄</div>
+      <div class="notice">
+        評量結果對應說明：
+        <strong>特優</strong> 95–100%&ensp;｜&ensp;<strong>優</strong> 85–94%&ensp;｜&ensp;<strong>良</strong> 70–84%&ensp;｜&ensp;<strong>中等</strong> 55–69%&ensp;｜&ensp;<strong>中下</strong> 40–54%&ensp;｜&ensp;<strong>待加強</strong> 39% 以下
+      </div>
+      <div style="overflow-x:auto">
+        <table class="unit-table" id="scoreTable">
+          <thead>
+            <tr>
+              <th style="width:60px">週次</th>
+              <th style="width:160px">單元名稱</th>
+              <th style="width:120px">評量方式</th>
+              <th style="width:110px">評量日期</th>
+              <th style="width:130px">評量結果</th>
+            </tr>
+          </thead>
+          <tbody id="scoreBody"></tbody>
+        </table>
+      </div>
+
+      <div id="scoreSummaryWrap" style="margin-top:1rem;display:none">
+        <div class="section-title" style="margin-top:.5rem">評量統計</div>
+        <div class="score-summary" id="scoreSummary"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">整體評語與建議</div>
+      <div class="form-row">
+        <div class="field">
+          <label>整體學習表現評語</label>
+          <textarea id="overallComment" rows="4"
+            placeholder="請填寫學生本學期整體學習表現..."></textarea>
+        </div>
+        <div class="field">
+          <label>教師建議</label>
+          <textarea id="teacherSuggestion" rows="4"
+            placeholder="請填寫對學生下學期的建議與期望..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-sec" onclick="showStep(2)">← 上一步</button>
+      <button class="btn-outline" onclick="printIGP()">🖨 列印 / 匯出 PDF</button>
+      <button class="btn-pri" onclick="exportData()">💾 儲存資料（JSON）</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- PRINT VIEW (hidden, used for print only) -->
+<div id="printView" style="display:none"></div>
+
+<script>
+// ─── 課程資料 ─────────────────────────────────────────────
+const CURRICULUM = [
+  {
+    id:"數學/七年級(文津)", name:"數學", grade:"七年級", hours:"4",
+    teacher:"（待定）", type:"領域學習課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、B2.科技資訊與媒體素養、C2.人際關係與團隊合作",
+    units:[
+      {w:"1-2",  u:"1-1 二元一次方程式",          t:"1. 能由具體情境用x、y符號列出二元一次式。\n2. 能合併/化簡算式中相同的文字符號、常數。\n3. 能以代入法或枚舉法求二元一次方程式的解。",                                                                          a:["加深"],           e:["紙筆測驗","口語評量"]},
+      {w:"3",    u:"1-2 解二元一次聯立方程式",     t:"1. 了解二元一次方程式解的意義。\n2. 能熟練使用代入消去法、加減消去法求解。\n3. 二元一次不定方程補充。\n4. 三元一次方程組探討（加廣）。",                                                                       a:["加深","加廣"],    e:["紙筆測驗","口語評量"]},
+      {w:"4-5",  u:"1-3 應用問題",                 t:"1. 能運用二元一次聯立方程式解決日常生活問題，並判別解是否合乎題意。\n2. 行列式解二元一次方程組（加廣）。\n3. 特殊聯立方程式（加廣）。",                                                                         a:["加深","加廣"],    e:["紙筆測驗","實作評量"]},
+      {w:"6-7",  u:"2-1 直角坐標平面",             t:"1. 認識直角坐標、坐標表示法。\n2. 介紹四個象限上的符號規則。\n3. 能判斷一個點位於哪一個象限。",                                                                                                                   a:["統整教學主題"],   e:["紙筆測驗","實作評量"]},
+      {w:"8-9",  u:"2-2 二元一次方程式的圖形",     t:"1. 能在直角坐標平面上描繪二元一次方程式的圖形。\n2. 認識斜率，直線方程式各種求法（斜截式、點斜式、截距式、兩點式）（加廣）。",                                                                                 a:["加深","加廣"],    e:["紙筆測驗","實作評量"]},
+      {w:"10-11",u:"3-1 比例式",                   t:"1. 了解比的性質與比值的意義，熟練比值的求法。\n2. 能熟練比例式的基本運算與性質。\n3. 連比與連比例式、合分比性質（加廣）。",                                                                                      a:["加深","加廣"],    e:["紙筆測驗","口語評量"]},
+      {w:"12-14",u:"3-2 正比與反比",               t:"1. 能理解正、反比關係的意義。\n2. 正、反比在生活中的運用。\n3. 正反比補充題型（加廣）。",                                                                                                                          a:["統整教學主題"],   e:["紙筆測驗"]},
+      {w:"15-16",u:"4-1 一元一次不等式的解及圖示", t:"1. 能由具體情境中列出一元一次不等式。\n2. 能圖示一元一次不等式的解。\n3. 絕對值不等式補充（加廣）。",                                                                                                             a:["加深","加廣"],    e:["紙筆測驗","口語評量"]},
+      {w:"17-18",u:"4-2 解不等式及其應用",         t:"1. 能以移項法則找出不等式解的範圍，並以數線表示之。\n2. 能列不等式，並求出滿足條件的數，配合情境檢驗合理性。\n3. 能判斷一元一次不等式的解。",                                                                   a:["加深","加廣"],    e:["紙筆測驗"]},
+      {w:"19",   u:"第5章 統計圖表與統計數據",      t:"1. 能繪製直方圖、長條圖、圓形圖、折線圖、列聯表。\n2. 能計算平均數、中位數與眾數描述資料特性。\n3. 能使用Excel繪製統計圖表（加廣）。",                                                                          a:["加深","加廣"],    e:["紙筆測驗","實作評量"]},
+      {w:"20-21",u:"第6章 線對稱與三視圖",          t:"1. 能透過格子點做出線對稱的鏡射圖形。\n2. 能用線對稱概念理解等腰三角形、正方形、菱形、箏形、正多邊形。\n3. 能理解立體圖形視圖的意義，並繪製對應方向的視圖。",                                                 a:["加深","加廣"],    e:["紙筆測驗","實作評量"]}
+    ]
+  },
+  {
+    id:"獨素一幟Ⅰ/七年級(文津)", name:"獨素一幟Ⅰ", grade:"七年級", hours:"1",
+    teacher:"（待定）", type:"特殊需求課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、C2.人際關係與團隊合作",
+    units:[
+      {w:"1-5",  u:"笛卡爾之心",   t:"1. 製作笛卡爾之心。\n2. 笛卡爾與直角坐標歷史介紹。\n3. 心形線數學曲線介紹。",                                 a:["加深","加廣"], e:["實作評量","檔案評量"]},
+      {w:"6-10", u:"無限翻轉六邊形",t:"1. 認識生活中常見的正六邊形結構。\n2. 如何做出正六邊形。\n3. 製作翻轉正六邊形及其原理。",                    a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"11-15",u:"洞茲洞茲洞",   t:"1. 利用打洞機做出指定對稱圖形。\n2. 線對稱圖形、對稱軸與中垂軸。\n3. 中心對稱圖形、對稱中心與作圖步驟。",    a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"16-20",u:"正五邊形紙帶結",t:"1. 製作幸運星星。\n2. 探討隱藏的正五邊形、菱形、等腰三角形。\n3. 探討正五邊形的全等。",                     a:["加深","加廣"], e:["實作評量","檔案評量"]},
+      {w:"21",   u:"反思與展望",   t:"1. 本學期課程成果冊整理與裝訂。\n2. 完成課程回饋單。",                                                         a:[],              e:["檔案評量"]}
+    ]
+  },
+  {
+    id:"數學/八年級(筱莉)", name:"數學", grade:"八年級", hours:"4",
+    teacher:"（待定）", type:"領域學習課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、B2.科技資訊與媒體素養、C2.人際關係與團隊合作",
+    units:[
+      {w:"1-2",  u:"1-1等差數列、1-2等差級數",  t:"1. 等差數列的一般項與等差中項。\n2. 等差級數公式。\n3. Sigma符號認識與運算（加廣）。",                                             a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"3-4",  u:"1-3 等比數列",              t:"1. 等比數列的一般項與等比中項。\n2. 等比級數。\n3. 費式數列、數學歸納法（加廣）。",                                                  a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"5-6",  u:"2-1 函數與函數圖形",        t:"1. 認識函數、函數值與函數圖形。\n2. 數學幾何繪圖軟體GGB應用。\n3. 介紹週期函數、三角函數（加廣）。",                                a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"7",    u:"複習第一次定期評量",         t:"1. 等差數列及等差級數。\n2. 等比數列。\n3. 線型與二次函數。",                                                                         a:["加深"],        e:["紙筆測驗"]},
+      {w:"8-9",  u:"3-1 三角形與多邊形內外角",  t:"1. 內角和定理與外角和定理。\n2. n邊形的內角和與外角和。\n3. 正n邊形的內、外角；鑲嵌探討（加廣）。",                                  a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"10",   u:"3-2 尺規作圖",              t:"1. 尺規作圖基本技法。\n2. 特殊的尺規作圖。\n3. 從摺紙討論尺規作圖。",                                                                  a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"11-12",u:"3-3 三角形的全等性質",      t:"1. 三角形的全等性質介紹（SSS、SAS、ASA、AAS）。\n2. 三角形全等的幾何應用。",                                                          a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"13",   u:"3-4 中垂線與角平分線",      t:"1. 中垂線與角平分線的性質。\n2. 特殊三角形的邊長與面積。",                                                                            a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"14-15",u:"3-5 三角形的邊角關係",      t:"1. 三角形的邊角關係。\n2. 樞紐與逆樞紐定理。\n3. 直角三角形的判別。",                                                                 a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"16-17",u:"4-1 平行",                  t:"1. 平行判定與性質。\n2. 截角性質。\n3. 摺紙討論平行星動（加廣）。",                                                                    a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"18",   u:"4-2 平行四邊形",            t:"1. 平行四邊形的性質。\n2. 分點公式（加廣）。",                                                                                         a:["加深","加廣"], e:["紙筆測驗"]},
+      {w:"19",   u:"4-3 特殊四邊形",            t:"1. 特殊四邊形的對角線性質。\n2. 特殊四邊形的中點連線性質。",                                                                           a:["加深","加廣"], e:["紙筆測驗"]},
+      {w:"20-21",u:"複習第三次定期評量",         t:"1. 三角形的邊角關係。\n2. 平行。\n3. 平行四邊形與特殊四邊形。",                                                                        a:["加深"],        e:["紙筆測驗"]}
+    ]
+  },
+  {
+    id:"獨素一幟Ⅱ/八年級(筱莉)", name:"獨素一幟Ⅱ", grade:"八年級", hours:"1",
+    teacher:"（待定）", type:"特殊需求課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、C2.人際關係與團隊合作",
+    units:[
+      {w:"1",    u:"破冰",             t:"1. 本學期課程內容介紹。\n2. 成績計算方式。\n3. 小組分組方式。",                                                                                    a:[],              e:["口語評量","觀察評量"]},
+      {w:"2-6",  u:"生活中的費波那契", t:"1. 認識費波那契數列。\n2. 尋找生活中有關的費氏數列。\n3. 延伸黃金比例與費氏數列，討論與性別平等議題。",                                          a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"7-10", u:"四面八方，八面圓通",t:"1. 介紹正四面體與正八面體。\n2. 欣賞正多面體的藝術作品。",                                                                                        a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"11-14",u:"我們只有一個地球", t:"1. 介紹世界地球日。\n2. 人類對生態所造成的危害及改變措施（防曬保養品、碳排放）。\n3. 了解碳足跡的計算方式及標章。",                             a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"15-20",u:"放風吹",           t:"1. 介紹碎形的形成與規律。\n2. 碎形卡片製作。\n3. 風箏架構及原理介紹。\n4. 製作風箏並進行施放。",                                                  a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"21",   u:"反思與展望",       t:"1. 本學期課程成果冊整理與裝訂。\n2. 完成課程回饋單。",                                                                                              a:[],              e:["檔案評量"]}
+    ]
+  },
+  {
+    id:"數學/九年級(宛均)", name:"數學", grade:"九年級", hours:"4",
+    teacher:"蔡宛均", type:"領域學習課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、B2.科技資訊與媒體素養、C2.人際關係與團隊合作",
+    units:[
+      {w:"1-3",  u:"1-1 二次函數的圖形與最大/最小值", t:"1. 能描繪二次函數的圖形，察覺對稱軸、開口方向及最高/最低點。\n2. 二次函數與配方法。\n3. 介紹根與係數（加廣）。",                a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"4",    u:"2-1 資料的分析",                  t:"1. 全距、四分位距、盒狀圖。\n2. 二維數據分析。\n3. 能利用電腦統計軟體進行數據整理（加廣）。",                                      a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"5-6",  u:"2-2 機率",                        t:"1. 樣本空間、事件、古典機率。\n2. 加法原理與乘法原理（加深）。\n3. 條件機率的意義（加深）。",                                       a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"7-8",  u:"3-1 空間中的線、平面與形體",      t:"1. 能計算柱體、錐體的體積與表面積。\n2. 球體體積。",                                                                                a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"9-11", u:"複習（第一～三冊）",              t:"1. 複習數與量、代數、幾何各章節。",                                                                                                  a:["加深","重組"], e:["紙筆測驗"]},
+      {w:"12-15",u:"複習（第四～六冊）",              t:"1. 複習第四至六冊各章節。",                                                                                                          a:["加深","重組"], e:["紙筆測驗"]},
+      {w:"16-19",u:"腦力激盪 & 空間大考驗",           t:"1. 拉密（Rummikub）。\n2. 格格不入（Blockus）。",                                                                                    a:[],              e:["觀察評量","口語評量"]}
+    ]
+  },
+  {
+    id:"獨素一幟Ⅲ/九年級(宛均)", name:"獨素一幟Ⅲ", grade:"九年級", hours:"1",
+    teacher:"蔡宛均", type:"特殊需求課程",
+    coreComp:"A2.系統思考與問題解決、B1.符號運用與溝通表達、C2.人際關係與團隊合作",
+    units:[
+      {w:"1",    u:"破冰",             t:"1. 本學期課程內容介紹。\n2. 成績計算方式。\n3. 小組分組方式。",                                                                                      a:[],              e:["口語評量","觀察評量"]},
+      {w:"2-6",  u:"費用面面觀－累進稅率", t:"1. 認識所得稅課稅級距&累進稅率。\n2. 綜合所得稅額試算。\n3. 各國所得稅介紹。",                                                                a:["加深","加廣"], e:["紙筆測驗","口語評量"]},
+      {w:"7-9",  u:"費用面面觀－交通",    t:"1. TPASS通勤月票。\n2. UBIKE費用試算。\n3. 計程車費率及車資計費。\n4. 高速公路eTag計費。",                                                     a:["加深","加廣"], e:["紙筆測驗","實作評量"]},
+      {w:"10-14",u:"腦力大激盪",          t:"1. 一筆畫、數迴、圖形密碼、數謎等問題，訓練分析、邏輯推理能力。",                                                                              a:["加深","加廣"], e:["觀察評量","口語評量"]},
+      {w:"15-17",u:"藝數摺學",            t:"1. 介紹藝數摺學網站，培養學生自學能力。\n2. 透過摺紙活動，認識不同的數學性質。",                                                               a:["加深","加廣"], e:["實作評量","口語評量"]},
+      {w:"18-19",u:"反思與展望",          t:"1. 本學期課程成果冊整理與裝訂。\n2. 完成課程回饋單。",                                                                                           a:[],              e:["檔案評量"]}
+    ]
+  },
+  {
+    id:"探究科識力(智瑋)", name:"探究科識力", grade:"九年級", hours:"1",
+    teacher:"李智瑋", type:"特殊需求課程",
+    coreComp:"A2.系統思考與問題解決、B2.科技資訊與媒體素養、C2.人際關係與團隊合作",
+    units:[
+      {w:"1-3",  u:"愛迪生的挑戰",           t:"1. 複習電路中的基本物理量（電壓、電流、電阻）。\n2. 設計簡單電路測試筆芯的導電特性。\n3. 培養科學探究能力與實驗設計能力。",              a:[], e:["實作評量","口語評量"]},
+      {w:"4-5",  u:"一元充電器",             t:"1. 比較各種電池型式的應用場景與電壓特性。\n2. 製作「一元電池」並實測輸出電壓、電流。",                                                   a:[], e:["實作評量","口語評量"]},
+      {w:"6-7",  u:"快閃雲",                 t:"1. 探究「我們能否讓雲出現在日常生活中？」\n2. 進行「瓶中造雲」實驗。",                                                                     a:[], e:["實作評量","口語評量"]},
+      {w:"8-10", u:"直流與交流的愛恨情仇",   t:"1. 了解愛迪生與特斯拉之間的歷史爭鋒。\n2. 比較直流與交流的優缺點。\n3. 進行辯論訓練。",                                                  a:[], e:["口語評量","書面報告"]},
+      {w:"11-14",u:"台灣極端氣候特別報導",   t:"1. 蒐集近十年台灣重大氣候災害資料。\n2. 進行成因分析，提出防災策略。",                                                                    a:[], e:["書面報告","口語評量"]},
+      {w:"15-16",u:"特別報導修正",           t:"1. 播放賞析報導，同儕給予建議。\n2. 根據建議修正。\n3. 於早修時段對全校播放。",                                                           a:[], e:["口語評量","觀察評量"]},
+      {w:"17-19",u:"整理成果冊",             t:"1. 課程回顧，分享。\n2. 整理成果冊。",                                                                                                       a:[], e:["檔案評量"]}
+    ]
+  },
+  {
+    id:"數學獨立研究(筱莉)", name:"數學獨立研究", grade:"八年級", hours:"1",
+    teacher:"（待定）", type:"獨立研究課程",
+    coreComp:"A3.規劃執行與創新應變、B1.符號運用與溝通表達、C2.人際關係與團隊合作",
+    units:[
+      {w:"1",    u:"專題格式與架構介紹", t:"專題報告格式，文獻引用與APA格式說明。",                                               a:[], e:["口語評量"]},
+      {w:"2",    u:"相關軟體教學",       t:"圖表製作技巧，Excel、PowerPoint軟體應用。",                                          a:[], e:["實作評量"]},
+      {w:"3-8",  u:"分組專題研究",       t:"持續整理數據，資料收集與作品修正。",                                                  a:["加深","加廣"], e:["檔案評量","口語評量"]},
+      {w:"9-11", u:"研究過程與評鑑",     t:"討論如何呈現文稿，研究報告修正與討論。",                                             a:["加深","加廣"], e:["口語評量","書面報告"]},
+      {w:"12-16",u:"研究成果製作",       t:"文字報告製作，簡報製作（PowerPoint/Canva），製作展覽看板。",                         a:[], e:["書面報告","實作評量"]},
+      {w:"17",   u:"表達技巧訓練",       t:"表達練習、台風與口語表達技巧。",                                                     a:[], e:["口語評量","觀察評量"]},
+      {w:"18-21",u:"研究成果展現",       t:"獨立研究發表，上台報告。",                                                            a:[], e:["口語評量","書面報告","實作評量"]}
+    ]
+  }
+];
+
+const SCORES     = ["","特優 (95–100%)","優 (85–94%)","良 (70–84%)","中等 (55–69%)","中下 (40–54%)","待加強 (39%以下)"];
+const SCORE_CLS  = ["","s-top","s-good","s-fair","s-mid","s-low","s-weak"];
+const SCORE_PILL = ["","#27500a","#0c447c","#633806","#72243e","#791f1f","#791f1f"];
+const SCORE_BG   = ["","#eaf3de","#e6f1fb","#faeeda","#fbeaf0","#fcebeb","#fcebeb"];
+
+let currentSubject = null;
+let scores = {};
+let evalDates = {};
+let currentStep = 0;
+
+// ─── 初始化 ─────────────────────────────────────────────
+function populateSubjects(grade="") {
+  const sel = document.getElementById('selSubject');
+  sel.innerHTML = '<option value="">請選擇科目...</option>';
+  CURRICULUM.forEach((s,i) => {
+    if (!grade || s.grade === grade) {
+      const o = document.createElement('option');
+      o.value = i;
+      o.textContent = s.id;
+      sel.appendChild(o);
+    }
+  });
+}
+
+function filterSubjects() {
+  populateSubjects(document.getElementById('selGrade').value);
+  document.getElementById('subjPreview').style.display = 'none';
+  currentSubject = null;
+}
+
+function onSubjectChange() {
+  const idx = document.getElementById('selSubject').value;
+  if (idx === "" || idx === null) {
+    document.getElementById('subjPreview').style.display = 'none';
+    return;
+  }
+  currentSubject = CURRICULUM[+idx];
+  scores = {}; evalDates = {};
+  document.getElementById('prev-hours').textContent  = currentSubject.hours || '—';
+  document.getElementById('prev-units').textContent  = currentSubject.units.length;
+  document.getElementById('prev-type').textContent   = (currentSubject.type||'—').replace('課程','');
+  document.getElementById('prev-grade').textContent  = currentSubject.grade || '—';
+  document.getElementById('subjPreview').style.display = 'block';
+}
+
+// ─── 步驟控制 ────────────────────────────────────────────
+function showStep(n) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('step'+i).style.display = i===n ? 'block' : 'none';
+    const btn = document.getElementById('nav'+i);
+    btn.classList.toggle('active', i===n);
+  });
+  document.getElementById('progressFill').style.width = ((n+1)/4*100) + '%';
+  currentStep = n;
+  if (n===2 && currentSubject) buildUnitTable();
+  if (n===3 && currentSubject) buildScoreTable();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goStep1() {
+  if (!currentSubject) { alert('請先選擇科目！'); return; }
+  if (!document.getElementById('studentName').value.trim()) { alert('請輸入學生姓名！'); return; }
+  buildInfoDisplay();
+  // Pre-fill core competency
+  if (!document.getElementById('coreCompetency').value && currentSubject.coreComp) {
+    document.getElementById('coreCompetency').value = currentSubject.coreComp;
+  }
+  showStep(1);
+}
+
+// ─── 資訊顯示 ────────────────────────────────────────────
+function buildInfoDisplay() {
+  const s = currentSubject;
+  const student = document.getElementById('studentName').value.trim();
+  const semester = document.getElementById('semester').value;
+  const typeLabel = {
+    '領域學習課程': '■ 領域學習課程',
+    '特殊需求課程': '■ 特殊需求課程',
+    '獨立研究課程': '■ 獨立研究課程'
+  }[s.type] || s.type;
+
+  const rows = [
+    ['學年度學期', semester],
+    ['學生姓名',   student],
+    ['課程名稱',   s.name],
+    ['開課年級',   s.grade],
+    ['教學節數/週', (s.hours||'—') + ' 節'],
+    ['教學者',     s.teacher],
+    ['課程類型',   typeLabel],
+  ];
+  document.getElementById('infoDisplay').innerHTML =
+    rows.map(r => `<div class="info-row"><span class="info-label">${r[0]}</span><span class="info-val">${r[1]}</span></div>`).join('');
+}
+
+// ─── 週次單元表格 ─────────────────────────────────────────
+function buildUnitTable() {
+  const tbody = document.getElementById('unitBody');
+  tbody.innerHTML = currentSubject.units.map((u, i) => `
+    <tr>
+      <td style="font-weight:500;color:var(--text2);white-space:nowrap">${u.w}</td>
+      <td><div contenteditable="true" style="outline:none;font-size:13px;min-height:16px" data-unit="${i}">${u.u.replace(/\n/g,'<br>')}</div></td>
+      <td><div class="teach-cell">${u.t.replace(/\n/g,'<br>')}</div></td>
+      <td><div class="adj-tags">${(u.a||[]).map(a=>`<span class="adj-tag">${a}</span>`).join('') || '<span style="color:var(--text3);font-size:12px">—</span>'}</div></td>
+      <td><div class="eval-tags">${(u.e||[]).map(e=>`<span class="eval-tag">${e}</span>`).join('') || '<span style="color:var(--text3);font-size:12px">—</span>'}</div></td>
+    </tr>`).join('');
+}
+
+// ─── 評量結果表格 ─────────────────────────────────────────
+function buildScoreTable() {
+  const tbody = document.getElementById('scoreBody');
+  tbody.innerHTML = currentSubject.units.map((u, i) => `
+    <tr>
+      <td style="font-weight:500;color:var(--text2);white-space:nowrap">${u.w}</td>
+      <td style="font-size:13px">${u.u.replace(/\n/g,' ')}</td>
+      <td><div class="eval-tags">${(u.e||[]).map(e=>`<span class="eval-tag">${e}</span>`).join('')}</div></td>
+      <td>
+        <input type="date" id="date_${i}"
+          style="width:100%;font-size:12px;padding:4px 6px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-family:inherit"
+          onchange="evalDates[${i}]=this.value" ${evalDates[i]?'value="'+evalDates[i]+'"':''} />
+      </td>
+      <td>
+        <select class="score-select ${SCORE_CLS[scores[i]||0]}" id="score_${i}" onchange="updateScore(${i},this)">
+          ${SCORES.map((sc,si)=>`<option value="${si}" ${(scores[i]||0)===si?'selected':''}>${sc||'請選擇...'}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('');
+  updateSummary();
+}
+
+function updateScore(idx, sel) {
+  const si = +sel.value;
+  sel.className = 'score-select ' + (SCORE_CLS[si]||'');
+  scores[idx] = si;
+  updateSummary();
+}
+
+function updateSummary() {
+  const counts = [0,0,0,0,0,0,0];
+  Object.values(scores).forEach(v => { if(v) counts[v]++; });
+  const total = Object.values(scores).filter(v=>v>0).length;
+  const wrap = document.getElementById('scoreSummaryWrap');
+  if (total === 0) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const labels = ['','特優','優','良','中等','中下','待加強'];
+  document.getElementById('scoreSummary').innerHTML =
+    counts.map((c,i)=> i>0&&c>0
+      ? `<span class="score-pill" style="background:${SCORE_BG[i]};color:${SCORE_PILL[i]}">${labels[i]}：${c} 項</span>`
+      : '').join('');
+}
+
+// ─── 列印 ────────────────────────────────────────────────
+function printIGP() {
+  if (!currentSubject) { alert('尚未選擇科目'); return; }
+  const student  = document.getElementById('studentName').value.trim() || '__________';
+  const semester = document.getElementById('semester').value;
+  const s        = currentSubject;
+  const goal     = document.getElementById('annualGoal').value || '（未填）';
+  const core     = document.getElementById('coreCompetency').value || s.coreComp || '（未填）';
+  const comment  = document.getElementById('overallComment').value || '（未填）';
+  const suggest  = document.getElementById('teacherSuggestion').value || '（未填）';
+
+  const scoreLabels = ['','特優','優','良','中等','中下','待加強'];
+
+  const rows = s.units.map((u,i) => {
+    const si = scores[i]||0;
+    return `<tr>
+      <td>${u.w}</td>
+      <td>${u.u.replace(/\n/g,'<br>')}</td>
+      <td>${(u.e||[]).join('、')||'—'}</td>
+      <td>${evalDates[i]||'—'}</td>
+      <td style="font-weight:600;color:${SCORE_PILL[si]||'inherit'}">${si?scoreLabels[si]:'—'}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="UTF-8">
+<title>IGP－${student}－${s.name}－${semester}</title>
+<style>
+body{font-family:'Microsoft JhengHei','PingFang TC',sans-serif;font-size:12px;margin:16px 20px;color:#333}
+h2{font-size:15px;text-align:center;margin-bottom:4px;font-weight:600}
+h3{font-size:13px;margin:12px 0 4px;font-weight:600;border-left:3px solid #378add;padding-left:6px}
+p.sub{text-align:center;font-size:11px;color:#666;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;margin-bottom:10px}
+th,td{border:1px solid #aaa;padding:5px 8px;text-align:left;vertical-align:top;font-size:11px}
+th{background:#eef2f8;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.info-box{border:1px solid #aaa;padding:6px 10px}
+.info-lbl{font-size:10px;color:#888;display:block}
+.goal-box{border:1px solid #aaa;padding:8px;min-height:64px;white-space:pre-wrap;font-size:11px}
+.legend{font-size:10px;color:#666;margin-bottom:6px}
+.sig-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
+.sig-box{border-bottom:1px solid #333;padding-bottom:4px;min-height:36px}
+.sig-lbl{font-size:10px;color:#888;margin-top:2px}
+@media print{@page{margin:1.5cm}body{margin:0}}
+</style></head><body>
+<h2>新竹縣資賦優異學生個別輔導計畫（IGP）</h2>
+<p class="sub">${semester}・教育階段：■國中 □高中 □國小 □學前</p>
+<div class="grid2">
+  <div class="info-box"><span class="info-lbl">學生姓名</span>${student}</div>
+  <div class="info-box"><span class="info-lbl">課程名稱</span>${s.name}</div>
+  <div class="info-box"><span class="info-lbl">教學年級</span>${s.grade}</div>
+  <div class="info-box"><span class="info-lbl">課程類型</span>${s.type||'—'}</div>
+  <div class="info-box"><span class="info-lbl">教學節數/週</span>${s.hours||'—'} 節</div>
+  <div class="info-box"><span class="info-lbl">教學者</span>${s.teacher||'（待定）'}</div>
+</div>
+<h3>核心素養</h3>
+<div class="goal-box" style="min-height:36px">${core}</div>
+<h3>學年目標</h3>
+<div class="goal-box">${goal}</div>
+<h3>週次教學單元與評量結果</h3>
+<p class="legend">評量結果：特優 95–100%／優 85–94%／良 70–84%／中等 55–69%／中下 40–54%／待加強 39%以下</p>
+<table>
+  <thead><tr><th style="width:50px">週次</th><th style="width:130px">課程內容</th><th style="width:100px">評量方式</th><th style="width:80px">評量日期</th><th style="width:80px">評量結果</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+<h3>整體學習評語</h3>
+<div class="goal-box">${comment}</div>
+<h3>教師建議</h3>
+<div class="goal-box">${suggest}</div>
+<div class="sig-row">
+  <div><div class="sig-box"></div><div class="sig-lbl">教師簽名</div></div>
+  <div><div class="sig-box"></div><div class="sig-lbl">家長簽名</div></div>
+  <div><div class="sig-box"></div><div class="sig-lbl">日期</div></div>
+</div>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); setTimeout(()=>w.print(), 600); }
+  else    { alert('請允許瀏覽器開啟彈出視窗以列印。'); }
+}
+
+// ─── 儲存 JSON ───────────────────────────────────────────
+function exportData() {
+  if (!currentSubject) { alert('尚未選擇科目'); return; }
+  const student  = document.getElementById('studentName').value.trim();
+  const semester = document.getElementById('semester').value;
+  const s = currentSubject;
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    semester,
+    student,
+    subject: s.id,
+    courseName: s.name,
+    grade: s.grade,
+    teacher: s.teacher,
+    type: s.type,
+    annualGoal: document.getElementById('annualGoal').value,
+    coreCompetency: document.getElementById('coreCompetency').value,
+    overallComment: document.getElementById('overallComment').value,
+    teacherSuggestion: document.getElementById('teacherSuggestion').value,
+    units: s.units.map((u,i)=>({
+      week: u.w,
+      unit: u.u,
+      adjustment: u.a,
+      evalMethods: u.e,
+      evalDate: evalDates[i]||'',
+      score: scores[i]||0,
+      scoreLabel: SCORES[scores[i]||0]||''
+    }))
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `IGP_${student}_${s.name}_${semester}.json`;
+  a.click();
+}
+
+// ─── 啟動 ────────────────────────────────────────────────
+populateSubjects();
+</script>
+</body>
+</html>
